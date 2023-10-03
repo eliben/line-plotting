@@ -2,15 +2,27 @@
 
 const Canvas = document.getElementById("plot");
 const Ctx = Canvas.getContext("2d");
+const CanvasEdgeOffset = 5;
 
-drawPlot();
+const NumpointsBox = document.getElementById("numpoints");
+const PlotButton = document.getElementById("plotbutton");
+PlotButton.addEventListener("mousedown", onPlot);
+
+// TODO: replace with preset
+NumpointsBox.value = 200;
+
+onPlot();
 
 // ------------------------------------------------------------
 
-function drawPlot() {
-    // TODO add slider that controls how many points of the function are
-    // plotted.
-    let x = linspace(-6, 6, 60);
+function onPlot() {
+    let numpoints = Number(NumpointsBox.value);
+    drawPlot(numpoints);
+}
+
+function drawPlot(numpoints) {
+    console.log(`drawPlot(${numpoints})`);
+    let x = linspace(-6, 6, numpoints);
     // let y = x.map((v, _) => Math.sin(v * Math.PI));
 
     // TODO: can I have a text box with JS code and "eval" this?
@@ -23,7 +35,7 @@ function drawPlot() {
     Ctx.lineJoin = 'bevel';
     Ctx.strokeStyle = 'blue';
 
-    let points = dataToCanvasPoints(x, y, Canvas.clientWidth, 5);
+    let points = dataToCanvasPoints(x, y, Canvas.clientWidth, CanvasEdgeOffset);
     Ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) {
         Ctx.lineTo(points[i][0], points[i][1]);
