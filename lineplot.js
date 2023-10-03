@@ -1,6 +1,6 @@
 'use strict';
 
-const Canvas = document.getElementById("canvas");
+const Canvas = document.getElementById("plot");
 const Ctx = Canvas.getContext("2d");
 
 drawPlot();
