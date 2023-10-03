@@ -1,29 +1,36 @@
 'use strict';
 
-// TODO add slider that controls how many points of the function are
-// plotted.
-let x = linspace(-6, 6, 320);
-// let y = x.map((v, _) => Math.sin(v * Math.PI));
+const Canvas = document.getElementById("canvas");
+const Ctx = Canvas.getContext("2d");
 
-// TODO: can I have a text box with JS code and "eval" this?
-let y = x.map((v, _) => Math.sin(v * Math.PI) / (v * Math.PI));
-// let y = x.map((v, _) => v ** 3);
+drawPlot();
 
-let canvas = document.getElementById("canvas");
-let ctx = canvas.getContext("2d");
+// ------------------------------------------------------------
 
-ctx.beginPath();
-ctx.lineWidth = 2;
-ctx.lineJoin = 'bevel';
-ctx.strokeStyle = 'blue';
+function drawPlot() {
+    // TODO add slider that controls how many points of the function are
+    // plotted.
+    let x = linspace(-6, 6, 60);
+    // let y = x.map((v, _) => Math.sin(v * Math.PI));
 
-let points = dataToCanvasPoints(x, y, canvas.clientWidth, 5);
-ctx.moveTo(points[0][0], points[0][1]);
-for (let i = 1; i < points.length; i++) {
-    ctx.lineTo(points[i][0], points[i][1]);
+    // TODO: can I have a text box with JS code and "eval" this?
+    let y = x.map((v, _) => Math.sin(v * Math.PI) / (v * Math.PI));
+    // let y = x.map((v, _) => v ** 3);
+
+    Ctx.clearRect(0, 0, Canvas.width, Canvas.height);
+    Ctx.beginPath();
+    Ctx.lineWidth = 2;
+    Ctx.lineJoin = 'bevel';
+    Ctx.strokeStyle = 'blue';
+
+    let points = dataToCanvasPoints(x, y, Canvas.clientWidth, 5);
+    Ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length; i++) {
+        Ctx.lineTo(points[i][0], points[i][1]);
+    }
+
+    Ctx.stroke();
 }
-
-ctx.stroke();
 
 // linspace returns an array of numPoints values distributed linearly in
 // the (inclusive) rane [start,end], just like Numpy's linspace.
@@ -44,7 +51,7 @@ function linspace(start, end, numPoints) {
 // pixels); canvasEdgeOffset is the blank offset (in pixels) from the
 // canvas's edges for where the plot can go (this value can be 0).
 // Returns an array of pairs - each pair is a point on the canvas.
-function dataToCanvasPoints(xdata, ydata, canvasSize, canvasEdgeOffset) {
+function dataToCanvasPoints(x, y, canvasSize, canvasEdgeOffset) {
     if (x.length != y.length) {
         throw new Error(`x.length=${x.length} != y.length=${y.length}`);
     }
