@@ -5,11 +5,15 @@ const Ctx = Canvas.getContext("2d");
 const CanvasEdgeOffset = 5;
 
 const NumpointsBox = document.getElementById("numpoints");
+const XstartBox = document.getElementById("xstart");
+const XendBox = document.getElementById("xend");
 const PlotButton = document.getElementById("plotbutton");
 PlotButton.addEventListener("mousedown", onPlot);
 
-// TODO: replace with preset
 NumpointsBox.value = 200;
+XstartBox.value = -4;
+XendBox.value = 4;
+
 
 onPlot();
 
@@ -17,16 +21,18 @@ onPlot();
 
 function onPlot() {
     let numpoints = Number(NumpointsBox.value);
-    drawPlot(numpoints);
+    let xstart = Number(XstartBox.value);
+    let xend = Number(XendBox.value);
+    drawPlot(xstart, xend, numpoints);
 }
 
-function drawPlot(numpoints) {
-    console.log(`drawPlot(${numpoints})`);
-    let x = linspace(-6, 6, numpoints);
+function drawPlot(xstart, xend, numpoints) {
+    console.log(`drawPlot(${xstart}, ${xend}, ${numpoints})`);
+    let xdata = linspace(xstart, xend, numpoints);
     // let y = x.map((v, _) => Math.sin(v * Math.PI));
 
     // TODO: can I have a text box with JS code and "eval" this?
-    let y = x.map((v, _) => Math.sin(v * Math.PI) / (v * Math.PI));
+    let ydata = xdata.map((x, _) => Math.sin(x * Math.PI) / (x * Math.PI));
     // let y = x.map((v, _) => v ** 3);
 
     Ctx.clearRect(0, 0, Canvas.width, Canvas.height);
@@ -35,7 +41,7 @@ function drawPlot(numpoints) {
     Ctx.lineJoin = 'bevel';
     Ctx.strokeStyle = 'blue';
 
-    let points = dataToCanvasPoints(x, y, Canvas.clientWidth, CanvasEdgeOffset);
+    let points = dataToCanvasPoints(xdata, ydata, Canvas.clientWidth, CanvasEdgeOffset);
     Ctx.moveTo(points[0][0], points[0][1]);
     for (let i = 1; i < points.length; i++) {
         Ctx.lineTo(points[i][0], points[i][1]);

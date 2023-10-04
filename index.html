@@ -37,9 +37,11 @@
       display: grid;
       align-items: center;
       grid-template-columns: 2fr 4fr;
-      grid-template-rows: repeat(2, fit-content());
+      grid-template-rows: repeat(4, fit-content());
       grid-template-areas:
         "numpoints-label numpoints"
+        "xstart-label xstart"
+        "xend-label xend"
         ". plotbutton"
     }
 
@@ -59,6 +61,28 @@
 
     .numpoints {
       grid-area: numpoints;
+      justify-self: left;
+      text-align: center;
+      padding-top: 5px;
+    }
+
+    .xstart-label {
+      grid-area: xstart-label;
+    }
+
+    .xstart {
+      grid-area: xstart;
+      justify-self: left;
+      text-align: center;
+      padding-top: 5px;
+    }
+
+    .xend-label {
+      grid-area: xend-label;
+    }
+
+    .xend {
+      grid-area: xend;
       justify-self: left;
       text-align: center;
       padding-top: 5px;
@@ -95,8 +119,9 @@
       <canvas id="plot" width="500" height="500"></canvas>
     </div>
     <div class="controls">
-      <div class="numpoints-label control-label">Num points:</div>
-      <div class="numpoints"><input id="numpoints" size="4"></input></div>
+      <div class="numpoints-label control-label">Num points:</div><div class="numpoints"><input id="numpoints" size="4"></input></div>
+      <div class="xstart-label control-label">Start X:</div><div class="xstart"><input id="xstart" size="4"></input></div>
+      <div class="xend-label control-label">End X:</div><div class="xend"><input id="xend" size="4"></input></div>
       <div class="plotbutton"><button id="plotbutton" class="plotbutton-style" title="Plot">Plot</button></div>
     </div>
     <div class="sidebar">
