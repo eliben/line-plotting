@@ -13,7 +13,7 @@
       grid-template-rows: repeat(2, fit-content());
       grid-template-areas:
         "plotcanvas sidebar"
-        "controls sidebar"
+        "controls ."
     }
 
     .plotcanvas {
@@ -150,7 +150,14 @@
       <div class="plotbutton"><button id="plotbutton" class="plotbutton-style" title="Plot">Plot</button></div>
     </div>
     <div class="sidebar">
-      Plot ftw
+      <p><strong>Line plotter</strong></p>
+      <p>Plots 2D functions of <i>y(x)</i> in a given range.</p>
+      <p><b>y(x):</b> the function to plot. Use JS syntax, assuming <i>x</i> is pre-defined. For
+      example, <i>Math.sin(Math.PI * x)</i> will plot a sinusoid.</p>
+      <p><b>Num points:</b> how many points to plot; the points are generated with linear
+            spacing in the given (inclusive) range.</p>
+      <p><b>Start X:</b> value of <i>x</i> to start the plot from.</p>
+      <p><b>End X:</b> value of <i>x</i> to end the plot at.</p>
     </div>
   </div>
   <script src="lineplot.js"></script>
