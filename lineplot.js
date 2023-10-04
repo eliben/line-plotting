@@ -4,6 +4,7 @@ const Canvas = document.getElementById("plot");
 const Ctx = Canvas.getContext("2d");
 const CanvasEdgeOffset = 5;
 
+const YxBox = document.getElementById("yx");
 const NumpointsBox = document.getElementById("numpoints");
 const XstartBox = document.getElementById("xstart");
 const XendBox = document.getElementById("xend");
@@ -13,6 +14,7 @@ const InterpolateBox = document.getElementById("interpolate-points");
 PlotButton.addEventListener("mousedown", onPlot);
 InterpolateCheckbox.addEventListener("change", onStateChange);
 
+YxBox.value = "Math.sin(Math.PI * x)";
 NumpointsBox.value = 200;
 XstartBox.value = -4;
 XendBox.value = 4;
@@ -23,6 +25,7 @@ onPlot();
 // ------------------------------------------------------------
 
 function onPlot() {
+    let yx = YxBox.value;
     let numpoints = Number(NumpointsBox.value);
     let xstart = Number(XstartBox.value);
     let xend = Number(XendBox.value);
@@ -39,12 +42,9 @@ function onStateChange() {
 }
 
 function drawPlot(xstart, xend, numpoints) {
-    console.log(`drawPlot(${xstart}, ${xend}, ${numpoints})`);
+    console.log(`drawPlot(${yx}, ${xstart}, ${xend}, ${numpoints})`);
     let xdata = linspace(xstart, xend, numpoints);
-
-    // TODO: can I have a text box with JS code and "eval" this?
-    let ydata = xdata.map((x, _) => Math.sin(x * Math.PI) / (x * Math.PI));
-    // let y = x.map((v, _) => v ** 3);
+    let ydata = xdata.map((x, _) => eval(yx));
 
     Ctx.clearRect(0, 0, Canvas.width, Canvas.height);
     Ctx.beginPath();
