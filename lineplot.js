@@ -19,6 +19,8 @@ NumpointsBox.value = 200;
 XstartBox.value = -4;
 XendBox.value = 4;
 
+// TODO: explain interpolate in the sidebar
+
 onStateChange();
 onPlot();
 
@@ -34,14 +36,14 @@ function onPlot() {
         let interpolatePoints = Number(InterpolateBox.value);
         console.log(`have interpolate for ${interpolatePoints}`);
     }
-    drawPlot(xstart, xend, numpoints);
+    drawPlot(yx, xstart, xend, numpoints);
 }
 
 function onStateChange() {
     InterpolateBox.disabled = !InterpolateCheckbox.checked;
 }
 
-function drawPlot(xstart, xend, numpoints) {
+function drawPlot(yx, xstart, xend, numpoints) {
     console.log(`drawPlot(${yx}, ${xstart}, ${xend}, ${numpoints})`);
     let xdata = linspace(xstart, xend, numpoints);
     let ydata = xdata.map((x, _) => eval(yx));
