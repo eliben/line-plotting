@@ -11,6 +11,7 @@ const XendBox = document.getElementById("xend");
 const PlotButton = document.getElementById("plotbutton");
 const InterpolateCheckbox = document.getElementById("enable-interpolate");
 const InterpolateBox = document.getElementById("interpolate-points");
+const ShowpointsBox = document.getElementById("show-points");
 PlotButton.addEventListener("mousedown", onPlot);
 InterpolateCheckbox.addEventListener("change", onStateChange);
 
@@ -62,12 +63,14 @@ function drawPlot(yx, xstart, xend, numpoints) {
     Ctx.stroke();
 
     // Draw the points themselves
-    Ctx.fillStyle = 'red';
-    for (let i = 0; i < points.length; i++) {
-        Ctx.beginPath();
-        Ctx.arc(points[i][0], points[i][1], 3, 0, 2 * Math.PI, false);
-        Ctx.fill();
-        Ctx.closePath();
+    if (ShowpointsBox.checked) {
+        Ctx.fillStyle = 'red';
+        for (let i = 0; i < points.length; i++) {
+            Ctx.beginPath();
+            Ctx.arc(points[i][0], points[i][1], 3, 0, 2 * Math.PI, false);
+            Ctx.fill();
+            Ctx.closePath();
+        }
     }
 }
 
