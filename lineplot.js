@@ -59,8 +59,16 @@ function drawPlot(yx, xstart, xend, numpoints) {
     for (let i = 1; i < points.length; i++) {
         Ctx.lineTo(points[i][0], points[i][1]);
     }
-
     Ctx.stroke();
+
+    // Draw the points themselves
+    Ctx.fillStyle = 'red';
+    for (let i = 0; i < points.length; i++) {
+        Ctx.beginPath();
+        Ctx.arc(points[i][0], points[i][1], 3, 0, 2 * Math.PI, false);
+        Ctx.fill();
+        Ctx.closePath();
+    }
 }
 
 // linspace returns an array of numPoints values distributed linearly in
@@ -74,14 +82,15 @@ function linspace(start, end, numPoints) {
     return new Array(numPoints).fill(null).map((_, i) => start + i * step);
 }
 
-// dataToCanvasPoints takes data for a 2D plot (array of x and array of y
-// values that have to be of the same length) and maps them to canvas points
-// for plotting. For each i, y[i] should correspond to x[i] and they should
-// be sorted from left to right.
-// canvasSize is the width and height of the canvas (in
-// pixels); canvasEdgeOffset is the blank offset (in pixels) from the
-// canvas's edges for where the plot can go (this value can be 0).
-// Returns an array of pairs - each pair is a point on the canvas.
+// dataToCanvasPoints takes data for a 2D plot (array of x and array of y values
+// that have to be of the same length) and maps them to canvas points for
+// plotting. For each i, y[i] should correspond to x[i] and they should be
+// sorted from left to right.
+//
+// canvasSize is the width and height of the canvas (in pixels);
+// canvasEdgeOffset is the blank offset (in pixels) from the canvas's edges for
+// where the plot can go (this value can be 0). Returns an array of pairs - each
+// pair is a point on the canvas.
 function dataToCanvasPoints(x, y, canvasSize, canvasEdgeOffset) {
     if (x.length != y.length) {
         throw new Error(`x.length=${x.length} != y.length=${y.length}`);
