@@ -62,7 +62,7 @@ function drawPlot(xstart, xend, numpoints) {
 }
 
 // linspace returns an array of numPoints values distributed linearly in
-// the (inclusive) rane [start,end], just like Numpy's linspace.
+// the (inclusive) range [start,end], just like Numpy's linspace.
 function linspace(start, end, numPoints) {
     if (numPoints === undefined || numPoints < 2) {
         return [start, end];
