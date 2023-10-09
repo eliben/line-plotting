@@ -8,13 +8,16 @@ const NumpointsBox = document.getElementById("numpoints");
 const XstartBox = document.getElementById("xstart");
 const XendBox = document.getElementById("xend");
 const PlotButton = document.getElementById("plotbutton");
+const InterpolateCheckbox = document.getElementById("enable-interpolate");
+const InterpolateBox = document.getElementById("interpolate-points");
 PlotButton.addEventListener("mousedown", onPlot);
+InterpolateCheckbox.addEventListener("change", onStateChange);
 
 NumpointsBox.value = 200;
 XstartBox.value = -4;
 XendBox.value = 4;
 
-
+onStateChange();
 onPlot();
 
 // ------------------------------------------------------------
@@ -24,6 +27,10 @@ function onPlot() {
     let xstart = Number(XstartBox.value);
     let xend = Number(XendBox.value);
     drawPlot(xstart, xend, numpoints);
+}
+
+function onStateChange() {
+    InterpolateBox.disabled = !InterpolateCheckbox.checked;
 }
 
 function drawPlot(xstart, xend, numpoints) {
