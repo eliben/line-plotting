@@ -26,6 +26,11 @@ function onPlot() {
     let numpoints = Number(NumpointsBox.value);
     let xstart = Number(XstartBox.value);
     let xend = Number(XendBox.value);
+
+    if (InterpolateCheckbox.checked) {
+        let interpolatePoints = Number(InterpolateBox.value);
+        console.log(`have interpolate for ${interpolatePoints}`);
+    }
     drawPlot(xstart, xend, numpoints);
 }
 
@@ -36,7 +41,6 @@ function onStateChange() {
 function drawPlot(xstart, xend, numpoints) {
     console.log(`drawPlot(${xstart}, ${xend}, ${numpoints})`);
     let xdata = linspace(xstart, xend, numpoints);
-    // let y = x.map((v, _) => Math.sin(v * Math.PI));
 
     // TODO: can I have a text box with JS code and "eval" this?
     let ydata = xdata.map((x, _) => Math.sin(x * Math.PI) / (x * Math.PI));
