@@ -15,6 +15,7 @@ const ShowpointsBox = document.getElementById("show-points");
 PlotButton.addEventListener("mousedown", onPlot);
 InterpolateCheckbox.addEventListener("change", onStateChange);
 
+// Initial values for UI elements.
 YxBox.value = "Math.sin(Math.PI * x)";
 NumpointsBox.value = 200;
 XstartBox.value = -4;
@@ -23,7 +24,7 @@ XendBox.value = 4;
 onStateChange();
 onPlot();
 
-// ------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 function onPlot() {
     let yx = YxBox.value;
@@ -136,43 +137,4 @@ function dataToCanvasPoints(x, y, canvasSize, canvasEdgeOffset) {
         result[i] = [mapX(x[i]), mapY(y[i])];
     }
     return result;
-}
-
-// doInterpolate uses cubic spline interpolation to create N new points
-// between xs and calculates their ys, returning [pxs, pys] - the (x,y)
-// coords of the interpolated points.
-function doInterpolate(xs, ys, N) {
-    // Perform interpolation on xs, ys to get the coefficients of the splines.
-    let [A, b] = buildSplineEquations(xs, ys);
-    let coeffs = solve(A, b);
-
-    // Create N points linearly spaced between the min and max of xs, and
-    // calculate the corresponding py for each px using the appropriate curve.
-    let pxs = linspace(Math.min(...xs), Math.max(...xs), N);
-
-    let pys = Array(N).fill(0);
-    for (let i = 0; i < N; i++) {
-        let px = pxs[i];
-        // Find the number of the curve for px, based on which points from
-        // xs it's between. Can be done more efficiently with binary
-        // search, but this is good enough for a demo.
-        let curveIndex = -1;
-        for (let j = 0; j < xs.length - 1; j++) {
-            // is px between xs[j] and xs[j+1]? If yes, we found the curve!
-            if (px >= xs[j] && px <= xs[j + 1]) {
-                curveIndex = j;
-                break;
-            }
-        }
-        if (curveIndex < 0) {
-            throw new Error(`curve index not found for xs[${i}]=${xs[i]}`);
-        }
-
-        // With the curve index in hand, we can calculate py based on the
-        // relevant curve coefficients from coeffs.
-        let [a, b, c, d] = coeffs.slice(curveIndex * 4, curveIndex * 4 + 4);
-        pys[i] = a * px ** 3 + b * px ** 2 + c * px + d;
-    }
-
-    return [pxs, pys];
 }

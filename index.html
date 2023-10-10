@@ -10,7 +10,6 @@
       display: grid;
       max-width: 880px;
       grid-template-columns: 5fr 3fr;
-      grid-template-rows: repeat(2, fit-content());
       grid-template-areas:
         "plotcanvas sidebar"
         "controls ."
@@ -131,7 +130,7 @@
 
     #plot {
       background-color: white;
-      border: 10px solid gray;
+      border: 10px solid rgb(198, 198, 198);
     }
   </style>
 </head>
@@ -168,23 +167,24 @@
       <p><strong>Line plotter</strong></p>
       <p>Plots 2D functions of <i>y(x)</i> in a given range.</p>
       <p><b>y(x):</b> the function to plot. Use JS syntax, assuming <i>x</i> is pre-defined. For
-      example, <i>Math.sin(Math.PI * x)</i> will plot a sinusoid.</p>
+        example, <i>Math.sin(Math.PI * x)</i> will plot a sinusoid.</p>
       <p><b>Num points:</b> how many points to plot; the points are generated with linear
-          spacing in the given (inclusive) range. The plot will use linear interpolation
-          between points, so plots with a small number of points will be jagged approximations.
-          For more powerful interpolation, check the <b>Interpolate</b> box.
-        </p>
+        spacing in the given (inclusive) range. The plot will use linear interpolation
+        between points, so plots with a small number of points will be jagged approximations.
+        For more powerful interpolation, check the <b>Interpolate</b> box.
+      </p>
       <p><b>Show points:</b> show the sampled points with small circles.</p>
       <p><b>Start X:</b> value of <i>x</i> to start the plot from.</p>
       <p><b>End X:</b> value of <i>x</i> to end the plot at.</p>
       <p><b>Interpolate:</b> if checked, performs cubic spline interpolation
         between the sampled points (instead of the default linear interpolation).
-      The text box specifies how many points to generate using interpolation.
-      This number must be larger than <b>Num points</b>.</p>
+        The text box specifies how many points to generate using interpolation.
+        This number must be larger than <b>Num points</b>.</p>
     </div>
   </div>
   <script src="eqsolve.js"></script>
   <script src="spline.js"></script>
   <script src="lineplot.js"></script>
 </body>
+
 </html>
