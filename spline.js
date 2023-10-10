@@ -5,7 +5,6 @@
 //
 // Eli Bendersky [https://eli.thegreenplace.net]
 // This code is in the public domain.
-
 'use strict';
 
 // xs is an array of x coordinates (sorted from left to right), ys is an array

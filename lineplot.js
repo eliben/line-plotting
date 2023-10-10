@@ -20,8 +20,6 @@ NumpointsBox.value = 200;
 XstartBox.value = -4;
 XendBox.value = 4;
 
-// TODO: explain interpolate in the sidebar
-
 onStateChange();
 onPlot();
 
@@ -32,19 +30,23 @@ function onPlot() {
     let numpoints = Number(NumpointsBox.value);
     let xstart = Number(XstartBox.value);
     let xend = Number(XendBox.value);
-
+    let numInterpolate = -1;
     if (InterpolateCheckbox.checked) {
-        let interpolatePoints = Number(InterpolateBox.value);
-        console.log(`have interpolate for ${interpolatePoints}`);
+        numInterpolate = Number(InterpolateBox.value);
+        if (isNaN(numInterpolate) || numInterpolate < numpoints) {
+            alert(`invalid number of interpolation points: ${numInterpolate}`);
+            return;
+        }
     }
-    drawPlot(yx, xstart, xend, numpoints);
+
+    drawPlot(yx, xstart, xend, numpoints, numInterpolate);
 }
 
 function onStateChange() {
     InterpolateBox.disabled = !InterpolateCheckbox.checked;
 }
 
-function drawPlot(yx, xstart, xend, numpoints) {
+function drawPlot(yx, xstart, xend, numpoints, numInterpolate) {
     console.log(`drawPlot(${yx}, ${xstart}, ${xend}, ${numpoints})`);
     let xdata = linspace(xstart, xend, numpoints);
     let ydata = xdata.map((x, _) => eval(yx));
@@ -55,8 +57,8 @@ function drawPlot(yx, xstart, xend, numpoints) {
     // We draw either originalPoints or interpolated points, depending on
     // whether interpolation is enabled.
     let drawnPoints = originalPoints;
-    if (InterpolateCheckbox.checked) {
-        let [pxs, pys] = doInterpolate(xdata, ydata, Number(InterpolateBox.value));
+    if (numInterpolate > 0) {
+        let [pxs, pys] = doInterpolate(xdata, ydata, numInterpolate);
         drawnPoints = dataToCanvasPoints(pxs, pys, Canvas.clientWidth, CanvasEdgeOffset);
     }
 
@@ -143,7 +145,6 @@ function doInterpolate(xs, ys, N) {
     // Perform interpolation on xs, ys to get the coefficients of the splines.
     let [A, b] = buildSplineEquations(xs, ys);
     let coeffs = solve(A, b);
-    console.log(coeffs);
 
     // Create N points linearly spaced between the min and max of xs, and
     // calculate the corresponding py for each px using the appropriate curve.
@@ -164,7 +165,7 @@ function doInterpolate(xs, ys, N) {
             }
         }
         if (curveIndex < 0) {
-            alert(`curve index not found for xs[${i}]=${xs[i]}`);
+            throw new Error(`curve index not found for xs[${i}]=${xs[i]}`);
         }
 
         // With the curve index in hand, we can calculate py based on the

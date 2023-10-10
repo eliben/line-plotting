@@ -171,9 +171,16 @@
       example, <i>Math.sin(Math.PI * x)</i> will plot a sinusoid.</p>
       <p><b>Num points:</b> how many points to plot; the points are generated with linear
           spacing in the given (inclusive) range. The plot will use linear interpolation
-          between points, so plots with a small number of points will be jagged approximations.</p>
+          between points, so plots with a small number of points will be jagged approximations.
+          For more powerful interpolation, check the <b>Interpolate</b> box.
+        </p>
+      <p><b>Show points:</b> show the sampled points with small circles.</p>
       <p><b>Start X:</b> value of <i>x</i> to start the plot from.</p>
       <p><b>End X:</b> value of <i>x</i> to end the plot at.</p>
+      <p><b>Interpolate:</b> if checked, performs cubic spline interpolation
+        between the sampled points (instead of the default linear interpolation).
+      The text box specifies how many points to generate using interpolation.
+      This number must be larger than <b>Num points</b>.</p>
     </div>
   </div>
   <script src="eqsolve.js"></script>
