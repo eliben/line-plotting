@@ -49,25 +49,34 @@ function drawPlot(yx, xstart, xend, numpoints) {
     let xdata = linspace(xstart, xend, numpoints);
     let ydata = xdata.map((x, _) => eval(yx));
 
+    // originalPoints are the original calculated points (in canvas coordinates)
+    let originalPoints = dataToCanvasPoints(xdata, ydata, Canvas.clientWidth, CanvasEdgeOffset);
+
+    // We draw either originalPoints or interpolated points, depending on
+    // whether interpolation is enabled.
+    let drawnPoints = originalPoints;
+    if (InterpolateCheckbox.checked) {
+        let [pxs, pys] = doInterpolate(xdata, ydata, Number(InterpolateBox.value));
+        drawnPoints = dataToCanvasPoints(pxs, pys, Canvas.clientWidth, CanvasEdgeOffset);
+    }
+
     Ctx.clearRect(0, 0, Canvas.width, Canvas.height);
     Ctx.beginPath();
     Ctx.lineWidth = 2;
     Ctx.lineJoin = 'bevel';
     Ctx.strokeStyle = 'blue';
-
-    let points = dataToCanvasPoints(xdata, ydata, Canvas.clientWidth, CanvasEdgeOffset);
-    Ctx.moveTo(points[0][0], points[0][1]);
-    for (let i = 1; i < points.length; i++) {
-        Ctx.lineTo(points[i][0], points[i][1]);
+    Ctx.moveTo(drawnPoints[0][0], drawnPoints[0][1]);
+    for (let i = 1; i < drawnPoints.length; i++) {
+        Ctx.lineTo(drawnPoints[i][0], drawnPoints[i][1]);
     }
     Ctx.stroke();
 
-    // Draw the points themselves
+    // Show the points themselves; this is always the original points.
     if (ShowpointsBox.checked) {
         Ctx.fillStyle = 'red';
-        for (let i = 0; i < points.length; i++) {
+        for (let i = 0; i < originalPoints.length; i++) {
             Ctx.beginPath();
-            Ctx.arc(points[i][0], points[i][1], 3, 0, 2 * Math.PI, false);
+            Ctx.arc(originalPoints[i][0], originalPoints[i][1], 3, 0, 2 * Math.PI, false);
             Ctx.fill();
             Ctx.closePath();
         }
@@ -125,4 +134,44 @@ function dataToCanvasPoints(x, y, canvasSize, canvasEdgeOffset) {
         result[i] = [mapX(x[i]), mapY(y[i])];
     }
     return result;
+}
+
+// doInterpolate uses cubic spline interpolation to create N new points
+// between xs and calculates their ys, returning [pxs, pys] - the (x,y)
+// coords of the interpolated points.
+function doInterpolate(xs, ys, N) {
+    // Perform interpolation on xs, ys to get the coefficients of the splines.
+    let [A, b] = buildSplineEquations(xs, ys);
+    let coeffs = solve(A, b);
+    console.log(coeffs);
+
+    // Create N points linearly spaced between the min and max of xs, and
+    // calculate the corresponding py for each px using the appropriate curve.
+    let pxs = linspace(Math.min(...xs), Math.max(...xs), N);
+
+    let pys = Array(N).fill(0);
+    for (let i = 0; i < N; i++) {
+        let px = pxs[i];
+        // Find the number of the curve for px, based on which points from
+        // xs it's between. Can be done more efficiently with binary
+        // search, but this is good enough for a demo.
+        let curveIndex = -1;
+        for (let j = 0; j < xs.length - 1; j++) {
+            // is px between xs[j] and xs[j+1]? If yes, we found the curve!
+            if (px >= xs[j] && px <= xs[j + 1]) {
+                curveIndex = j;
+                break;
+            }
+        }
+        if (curveIndex < 0) {
+            alert(`curve index not found for xs[${i}]=${xs[i]}`);
+        }
+
+        // With the curve index in hand, we can calculate py based on the
+        // relevant curve coefficients from coeffs.
+        let [a, b, c, d] = coeffs.slice(curveIndex * 4, curveIndex * 4 + 4);
+        pys[i] = a * px ** 3 + b * px ** 2 + c * px + d;
+    }
+
+    return [pxs, pys];
 }
